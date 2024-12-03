@@ -95,3 +95,4 @@ class MaterialController extends Controller
         return redirect()->route('materials.index')->with('success', 'Material deleted successfully.');
     }
 }
+
