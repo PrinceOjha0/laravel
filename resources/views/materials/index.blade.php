@@ -48,7 +48,7 @@
                             <td>{{ $material->old_material_number }}</td>
                             <td>
                                 <a href="{{ route('materials.show', $material->id) }}" class="btn btn-info btn-sm">View</a>
-                                <a href="{{ route('materials.edit', $material->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('materials.edit', $material->id) }}"  class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('materials.destroy', $material->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')

@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 class MaterialController extends Controller
 {
     /**
+     * Constructor to initialize any necessary middleware or dependencies.
+     */
+    public function __construct()
+    {
+        // Optionally, you can add middleware, e.g., for authentication
+        // $this->middleware('auth');
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index()
@@ -42,8 +51,18 @@ class MaterialController extends Controller
         ]);
 
         // Create a new material record
-        Material::create($request->all());
+        $material = Material::create([
+            'material_type' => $request->input('material_type'),
+            'industry_sector' => $request->input('industry_sector'),
+            'base_unit_measure' => $request->input('base_unit_measure'),
+            'material_group' => $request->input('material_group'),
+            'creation_date' => $request->input('creation_date'),
+            'created_by' => $request->input('created_by'),
+            'loading_group' => $request->input('loading_group'),
+            'old_material_number' => $request->input('old_material_number')
+        ]);
 
+        // Redirect with success message
         return redirect()->route('materials.index')->with('success', 'Material created successfully.');
     }
 
@@ -80,9 +99,10 @@ class MaterialController extends Controller
             'old_material_number' => 'nullable|string|max:255',
         ]);
 
-        // Update the material record
+        // Update the material record with validated data
         $material->update($request->all());
 
+        // Redirect with success message
         return redirect()->route('materials.index')->with('success', 'Material updated successfully.');
     }
 
@@ -91,8 +111,10 @@ class MaterialController extends Controller
      */
     public function destroy(Material $material)
     {
-        $material->delete(); // Delete the material record
+        // Delete the material record
+        $material->delete();
+
+        // Redirect with success message
         return redirect()->route('materials.index')->with('success', 'Material deleted successfully.');
     }
 }
-
