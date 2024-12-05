@@ -8,29 +8,18 @@ use Illuminate\Http\Request;
 class MaterialController extends Controller
 {
     /**
-     * Constructor to initialize any necessary middleware or dependencies.
-     */
-    public function __construct()
-    {
-        // Optionally, you can add middleware, e.g., for authentication
-        // $this->middleware('auth');
-    }
-
-    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $materials = Material::all(); // Fetch all materials
-        return view('materials.index', compact('materials')); // Return the index view with data
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('materials.create'); // Return a form view for creating new material
+        // Fetch all materials
+        $materials = Material::all();
+        
+        // Return as JSON
+        return response()->json([
+            'success' => true,
+            'data' => $materials
+        ], 200);
     }
 
     /**
@@ -51,19 +40,14 @@ class MaterialController extends Controller
         ]);
 
         // Create a new material record
-        $material = Material::create([
-            'material_type' => $request->input('material_type'),
-            'industry_sector' => $request->input('industry_sector'),
-            'base_unit_measure' => $request->input('base_unit_measure'),
-            'material_group' => $request->input('material_group'),
-            'creation_date' => $request->input('creation_date'),
-            'created_by' => $request->input('created_by'),
-            'loading_group' => $request->input('loading_group'),
-            'old_material_number' => $request->input('old_material_number')
-        ]);
+        $material = Material::create($request->all());
 
-        // Redirect with success message
-        return redirect()->route('materials.index')->with('success', 'Material created successfully.');
+        // Return the created material as JSON
+        return response()->json([
+            'success' => true,
+            'message' => 'Material created successfully.',
+            'data' => $material
+        ], 201);
     }
 
     /**
@@ -71,15 +55,11 @@ class MaterialController extends Controller
      */
     public function show(Material $material)
     {
-        return view('materials.show', compact('material')); // Return the view for showing a specific material
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Material $material)
-    {
-        return view('materials.edit', compact('material')); // Return the edit form view with material data
+        // Return the specific material as JSON
+        return response()->json([
+            'success' => true,
+            'data' => $material
+        ], 200);
     }
 
     /**
@@ -102,8 +82,12 @@ class MaterialController extends Controller
         // Update the material record with validated data
         $material->update($request->all());
 
-        // Redirect with success message
-        return redirect()->route('materials.index')->with('success', 'Material updated successfully.');
+        // Return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Material updated successfully.',
+            'data' => $material
+        ], 200);
     }
 
     /**
@@ -114,7 +98,10 @@ class MaterialController extends Controller
         // Delete the material record
         $material->delete();
 
-        // Redirect with success message
-        return redirect()->route('materials.index')->with('success', 'Material deleted successfully.');
+        // Return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Material deleted successfully.'
+        ], 200);
     }
 }
