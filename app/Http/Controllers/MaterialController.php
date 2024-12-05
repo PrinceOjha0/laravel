@@ -12,10 +12,7 @@ class MaterialController extends Controller
      */
     public function index()
     {
-        // Fetch all materials
         $materials = Material::all();
-        
-        // Return as JSON
         return response()->json([
             'success' => true,
             'data' => $materials
@@ -27,7 +24,6 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate incoming request data
         $request->validate([
             'material_type' => 'required|string|max:255',
             'industry_sector' => 'required|string|max:255',
@@ -39,10 +35,8 @@ class MaterialController extends Controller
             'old_material_number' => 'nullable|string|max:255',
         ]);
 
-        // Create a new material record
         $material = Material::create($request->all());
 
-        // Return the created material as JSON
         return response()->json([
             'success' => true,
             'message' => 'Material created successfully.',
@@ -53,9 +47,17 @@ class MaterialController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Material $material)
+    public function show($id)
     {
-        // Return the specific material as JSON
+        $material = Material::find($id);
+
+        if (!$material) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Material not found.'
+            ], 404);
+        }
+
         return response()->json([
             'success' => true,
             'data' => $material
@@ -65,9 +67,17 @@ class MaterialController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Material $material)
+    public function update(Request $request, $id)
     {
-        // Validate incoming request data
+        $material = Material::find($id);
+
+        if (!$material) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Material not found.'
+            ], 404);
+        }
+
         $request->validate([
             'material_type' => 'required|string|max:255',
             'industry_sector' => 'required|string|max:255',
@@ -79,10 +89,8 @@ class MaterialController extends Controller
             'old_material_number' => 'nullable|string|max:255',
         ]);
 
-        // Update the material record with validated data
         $material->update($request->all());
 
-        // Return success response
         return response()->json([
             'success' => true,
             'message' => 'Material updated successfully.',
@@ -93,12 +101,19 @@ class MaterialController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Material $material)
+    public function destroy($id)
     {
-        // Delete the material record
+        $material = Material::find($id);
+
+        if (!$material) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Material not found.'
+            ], 404);
+        }
+
         $material->delete();
 
-        // Return success response
         return response()->json([
             'success' => true,
             'message' => 'Material deleted successfully.'
